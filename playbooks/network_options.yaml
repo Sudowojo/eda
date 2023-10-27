@@ -1,0 +1,12 @@
+---
+- name: Configure network option for AIX
+  hosts: all
+  become: yes
+  gather_facts: no
+  vars:
+    tcp_recvspace: 262144
+    tcp_sendspace: 262144
+    key: "tcp_recvspace"  # Default key, change it to any default you want
+  tasks:
+    - name: Set Network Option ({{ key }})
+      ansible.builtin.raw: no -p -o {{ key }}={{ vars[key] }}
