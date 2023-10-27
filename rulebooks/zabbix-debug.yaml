@@ -7,6 +7,6 @@
         port: 5002
   rules:
     - name: debug
-      condition: event.payload is defined
+      condition: event.payload.event_name is match("Network Options", ignorecase=true)
       action:
         debug:
