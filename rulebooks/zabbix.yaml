@@ -7,7 +7,7 @@
         port: 5001
   rules:
     - name: run
-      condition: event.payload.event_name is match("Network Options", ignorecase=true)
+      condition: event.payload is defined
       action:
         run_job_template: 
           name: Network Options Set 
