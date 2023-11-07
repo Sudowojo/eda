@@ -4,7 +4,7 @@
   sources:
     - ansible.eda.webhook:
         host: 0.0.0.0
-        port: 5002
+        port: 6002
   rules:
     - name: debug
       condition: event.payload is defined
