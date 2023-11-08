@@ -13,4 +13,5 @@
           name: Network Options 
           organization: Default
           job_args:
-            key: event.payload.event_tags.key[0]
+            extra_vars:
+              key: event.payload.event_tags.key[0]
