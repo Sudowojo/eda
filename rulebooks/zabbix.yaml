@@ -14,4 +14,4 @@
           organization: Default
           job_args:
             extra_vars:
-              key: event.payload.event_tags.key[0]
+              key: "{{ event.payload.event_tags.key[0] }}"
