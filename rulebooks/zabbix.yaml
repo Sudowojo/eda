@@ -7,10 +7,10 @@
         port: 6001
   rules:
     - name: run
-      condition: event.payload is defined
+      condition: event.payload.event_tags is select("==", "Network Options")
       action:
         run_job_template: 
           name: Network Options 
           organization: Default
           job_args:
-            key: "tcp_recvspace"
+            key: event.payload.event_tags.key[0]

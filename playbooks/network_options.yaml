@@ -6,7 +6,15 @@
   vars:
     tcp_recvspace: 262144
     tcp_sendspace: 262144
+    use_isno: 0
+    sb_max: 1048576
     key: "tcp_recvspace"  # Default key, change it to any default you want
   tasks:
+    - name: Check if the tunable exists
+      fail:
+        msg: "'{{ key }}' is not defined"
+      when: vars[key] is not defined
+
     - name: Set Network Option ({{ key }})
       ansible.builtin.raw: no -p -o {{ key }}={{ vars[key] }}
+      when: vars[key] is defined
