@@ -7,7 +7,7 @@
         port: 6001
   rules:
     - name: run
-      condition: event.payload.event_tags.playbooks is select("==", "Network Options")
+      condition: event.payload.event_tags.playbook is select("==", "Network Options")
       action:
         run_job_template: 
           name: Network Options 
