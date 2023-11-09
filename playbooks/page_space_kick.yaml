@@ -2,6 +2,7 @@
 - name: Manage Page Space on AIX Server
   hosts: all
   gather_facts: no
+  become: yes
   vars:
     desired_usage_percentage: 50
 
