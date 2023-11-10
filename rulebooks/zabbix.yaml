@@ -16,3 +16,13 @@
             extra_vars:
               key: "{{ event.payload.event_tags.key[0] }}"
               run: "{{ event.payload.host_host }}"
+    - name: run
+      condition: event.payload.event_tags.playbook is select("==", "Page Space")
+      action:
+        run_job_template: 
+          name: Page Space Kick
+          organization: Default
+          job_args:
+            extra_vars:
+              kick_percentage: "{{ event.payload.event_tags.kick_percentage[0] }}"
+              run: "{{ event.payload.host_host }}"
