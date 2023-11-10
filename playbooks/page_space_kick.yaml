@@ -33,7 +33,22 @@
 
     - name: Calculate the pp's needed from rootvg
       set_fact:
-        pps_needed: "{{ (current_lp_size | int) - (new_lp_size | int) }}"
+        pps_needed: "{{ (new_lp_size | int) - (current_lp_size | int) }}"
+
+    - name: Calculate the free PP's
+      shell:  lsvg rootvg | grep "FREE PPs" | awk '{ print $(NF-2) }' 
+      register: pps_free
+      failed_when: pps_free.rc != 0
+
+    - name: Set pps_free fact
+      set_fact:
+        pps_free: "{{ pps_free.stdout | int }}"
+  
+    - name: Check if free PPs are more than PPs needed
+      assert:
+        that: pps_free >= pps_needed
+        fail_msg: "Not enough free PPs. Required: {{ pps_needed }}, Available: {{ pps_free }}"
+        success_msg: "Sufficient free PPs available."
 
     - name: Print
       ansible.builtin.debug:
