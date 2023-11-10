@@ -54,7 +54,7 @@
   
     - name: Check if free PPs are more than PPs needed
       assert:
-        that: pps_free >= pps_needed
+        that: pps_free | int >= pps_needed | int
         fail_msg: "Not enough free PPs. Required: {{ pps_needed }}, Available: {{ pps_free }}"
         success_msg: "Sufficient free PPs available."
 
