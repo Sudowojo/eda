@@ -1,6 +1,6 @@
 ---
 - name: Configure network option for AIX
-  hosts: all
+  hosts: " {{ run }}"
   become: yes
   gather_facts: no
   vars:

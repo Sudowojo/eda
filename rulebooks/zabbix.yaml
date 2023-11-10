@@ -15,5 +15,4 @@
           job_args:
             extra_vars:
               key: "{{ event.payload.event_tags.key[0] }}"
-              meta:
-                hosts: "{{ event.payload.host_host }}"
+              run: "{{ event.payload.host_host }}"
