@@ -4,7 +4,7 @@
   gather_facts: no
   become: yes
   vars:
-    kick_percentage: 0.20 | int
+    kick_percentage: 0.20
 
   tasks:
     - name: Get current active page space name
@@ -29,7 +29,7 @@
 
     - name: Calculate % of number of allocated logical partitions.
       set_fact:
-        new_lp_size: "{{ ((current_lp_size | float * kick_percentage) | round(0, 'ceil') | int + current_lp_size | int) }}"
+        new_lp_size: "{{ ((current_lp_size | float * 0.20) | round(0, 'ceil') | int + current_lp_size | int) }}"
 
     - name: Calculate the pp's needed from rootvg
       set_fact:
