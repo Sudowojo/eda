@@ -17,6 +17,16 @@
       register: current_page_space_in_mb
       failed_when: current_page_space_in_mb.rc != 0
 
+    - name: Calculate the current PP size
+      shell: lsvg rootvg | grep "PP SIZE:" | awk '{ print $(NF -1) }'
+      register: pp_size
+      failed_when: pp_size.rc != 0
+
+    - name: Convert current page space size to number of logical partitions (assuming default pp size of 128MB)
+      set_fact:
+        current_lp_size: "{{ (current_page_space_in_mb.stdout | int) / (pp_size.stdout | int) }}"
+      failed_when: current_lp_size is not defined
+
     - name: Print
       ansible.builtin.debug:
-        msg: page_space_name = {{ page_space_name.stdout }}. Current Page Space = {{ current_page_space_in_mb.stdout }}
+        msg: page_space_name = {{ page_space_name.stdout }}. Current Page Space = {{ current_page_space_in_mb.stdout }}. pp_size = {{ pp_size }}. current_lp_size = {{ current_lp_size }}
