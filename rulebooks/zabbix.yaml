@@ -6,7 +6,7 @@
         host: 0.0.0.0
         port: 6001
   rules:
-    - name: run
+    - name: Network Options
       condition: event.payload.event_tags.playbook is select("==", "Network Options")
       action:
         run_job_template: 
@@ -16,7 +16,7 @@
             extra_vars:
               key: "{{ event.payload.event_tags.key[0] }}"
               run: "{{ event.payload.host_host }}"
-    - name: run
+    - name: Page Space
       condition: event.payload.event_tags.playbook is select("==", "Page Space")
       action:
         run_job_template: 
