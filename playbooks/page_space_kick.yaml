@@ -44,20 +44,13 @@
       set_fact:
         pps_free: "{{ pps_free.stdout | int }}"
 
-    - name: Check type of pps_free
-      debug:
-        msg: "pps_free is a {{ pps_free | type_debug }}"
-
-    - name: Check type of pps_needed
-      debug:
-        msg: "pps_needed is a {{ pps_needed | type_debug }}"
-  
     - name: Check if free PPs are more than PPs needed
       assert:
         that: pps_free | int >= pps_needed | int
         fail_msg: "Not enough free PPs. Required: {{ pps_needed }}, Available: {{ pps_free }}"
         success_msg: "Sufficient free PPs available."
 
-    - name: Print
-      ansible.builtin.debug:
-        msg: current_lp_size = {{ current_lp_size }}, new_lp_size = {{ new_lp_size }}, pps_needed = {{ pps_needed }}
+    - name: Change the page space to make usage go under 90%
+      shell: chps -s {{ pps_needed }} "{{ page_space_name.stdout }}"
+      register: chps_output
+      failed_when: chps_output.rc != 0
