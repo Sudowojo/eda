@@ -4,7 +4,7 @@
   gather_facts: no
   become: yes
   vars:
-    desired_usage_percentage: 50
+    kick_percentage: 0.20
 
   tasks:
     - name: Get current active page space name
@@ -27,9 +27,9 @@
         current_lp_size: "{{ (current_page_space_in_mb.stdout | int) / (pp_size.stdout | int) }}"
       failed_when: current_lp_size is not defined
 
-    - name: Calculate 20% of number of allocated logical partitions.
+    - name: Calculate % of number of allocated logical partitions.
       set_fact:
-        new_lp_size: "{{ ((current_lp_size | float * 0.20) | round(0, 'ceil') | int + current_lp_size | int) }}"
+        new_lp_size: "{{ ((current_lp_size | float * kick_percentage | round(0, 'ceil') | int + current_lp_size | int) }}"
 
     - name: Calculate the pp's needed from rootvg
       set_fact:
@@ -50,7 +50,7 @@
         fail_msg: "Not enough free PPs. Required: {{ pps_needed }}, Available: {{ pps_free }}"
         success_msg: "Sufficient free PPs available."
 
-    - name: Change the page space to make usage go under 90%
+    - name: Change the page space
       shell: chps -s {{ pps_needed }} "{{ page_space_name.stdout }}"
       register: chps_output
       failed_when: chps_output.rc != 0
