@@ -29,4 +29,4 @@
 
     - name: Print
       ansible.builtin.debug:
-        msg: page_space_name = {{ page_space_name.stdout }}. Current Page Space = {{ current_page_space_in_mb.stdout }}. pp_size = {{ pp_size }}. current_lp_size = {{ current_lp_size }}
+        msg: page_space_name = {{ page_space_name.stdout }}. Current Page Space = {{ current_page_space_in_mb.stdout }}. pp_size = {{ pp_size.stdout }}. current_lp_size = {{ current_lp_size }}
