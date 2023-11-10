@@ -29,7 +29,7 @@
 
     - name: Calculate 20% of number of allocated logical partitions.
       set_fact:
-        new_lp_size: {{ current_lp_size * .20 | float | ceil }}
+        new_lp_size: "{{ current_lp_size * .20 | float | ceil }}"
 
     - name: Print
       ansible.builtin.debug:
