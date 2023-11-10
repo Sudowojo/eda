@@ -31,6 +31,10 @@
       set_fact:
         new_lp_size: "{{ ((current_lp_size | float * 0.20) | round(0, 'ceil') | int + current_lp_size | int) }}"
 
+    - name: Calculate the pp's needed from rootvg
+      set_fact:
+        pps_needed: "{{ current_lp_size | int - new_lp_size }}"
+
     - name: Print
       ansible.builtin.debug:
-        msg: current_lp_size = {{ current_lp_size }}, new_lp_size = {{ new_lp_size }}
+        msg: current_lp_size = {{ current_lp_size }}, new_lp_size = {{ new_lp_size }}, pps_needed = {{ pps_needed }}
