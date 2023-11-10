@@ -43,6 +43,14 @@
     - name: Set pps_free fact
       set_fact:
         pps_free: "{{ pps_free.stdout | int }}"
+
+    - name: Check type of pps_free
+      debug:
+        msg: "pps_free is a {{ pps_free | type_debug }}"
+
+    - name: Check type of pps_needed
+      debug:
+        msg: "pps_needed is a {{ pps_needed | type_debug }}"
   
     - name: Check if free PPs are more than PPs needed
       assert:
