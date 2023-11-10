@@ -33,7 +33,7 @@
 
     - name: Calculate the pp's needed from rootvg
       set_fact:
-        pps_needed: "{{ current_lp_size | int - new_lp_size }}"
+        pps_needed: "{{ (current_lp_size | int) - (new_lp_size | int) }}"
 
     - name: Print
       ansible.builtin.debug:
