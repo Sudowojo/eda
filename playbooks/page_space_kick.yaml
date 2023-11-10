@@ -4,7 +4,7 @@
   gather_facts: no
   become: yes
   vars:
-    kick_percentage: 0.20 | float
+    kick_percentage: 0.20 | int
 
   tasks:
     - name: Get current active page space name
