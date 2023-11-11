@@ -1,0 +1,24 @@
+---
+- name: Increase Filesystem Size
+  hosts: "{{ run }}"
+  vars:
+    kick_percentage: 0.20
+    key: /opt
+
+  tasks:
+    - name: Determine Operating System
+      ansible.builtin.set_fact:
+        os_type: "{{ ansible_facts['distribution'] | default(ansible_facts['os_family']) }}"
+
+    - name: Calculate the current size of {{ key }}
+      shell: df -m /opt | tail -1 | awk '{ print $2 }'
+      register: current_space_in_mb
+      failed_when: current_space_in_mb.rc != 0
+
+    - name: Calculate {{ kick_percentage }}% of {{ key }}
+      set_fact:
+        new_fs_size_in_mb: "{{ ((current_space_in_mb.stdout | int * kick_percentage | float) | round(0, 'ceil') | int + current_space_in_mb.stdout | int) }}"
+
+    - name: Print Debug
+      ansible.builtin.debug:
+        msg: Current Space: {{ current_space_in_mb.stdout }}. New Size: {{ new_fs_size_in_mb }}
