@@ -77,4 +77,4 @@
         body_format: json
         body: 
           title: "SELF HEALING (Page Space)"
-          text: "{{ run }}: Page Space Before: {{ current_page_space_in_mb }}MB ({{ current_page_space_in_percent }}), Page Space After: {{ new_page_space_in_mb }}MB ({{ new_page_space_in_percent }})"
+          text: "{{ run }}: Page Space Before: {{ current_page_space_in_mb.stdout }}MB ({{ current_page_space_in_percent.stdout }}), Page Space After: {{ new_page_space_in_mb.stdout }}MB ({{ new_page_space_in_percent.stdout }})"
