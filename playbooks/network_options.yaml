@@ -18,3 +18,14 @@
     - name: Set Network Option ({{ key }})
       ansible.builtin.raw: no -p -o {{ key }}={{ vars[key] }}
       when: vars[key] is defined
+
+    - name: Send message to Teams
+      uri:
+        url: "https://netorg850106.webhook.office.com/webhookb2/d4a67699-4480-4352-874f-f019501b92b9@4376b3ca-4676-4ba7-8757-8b7fa5c43d83/IncomingWebhook/9e2cd4ecd657428ab00fbdd11acb28d2/50b93d7b-3823-459c-8c45-6190930f4448"
+        method: POST
+        body_format: json
+        headers:
+          Content-Type: "application/json"
+        body: 
+          json: 
+            text: "[SELF HEAL] {{ run }}: no -p -o {{ key }}={{ vars[key] }}"
