@@ -5,13 +5,27 @@
   become: yes
 
   vars:
-    zabbix_agent_url: "https://cdn.zabbix.com/zabbix/binaries/stable/6.2/6.2.3/zabbix-agent-6.2.3-1.aix7.2.ppc.rpm"
-    zabbix_agent_rpm: "/tmp/zabbix-agent-6.2.3-1.aix7.2.ppc.rpm"
+    zabbix_agent_rpm: "/tmp/zabbix-agent.rpm"
 
   tasks:
     - name: Check if the target system is AIX
       ansible.builtin.set_fact:
         is_aix: "{{ ansible_os_family == 'AIX' }}"
+
+    - name: Get AIX version
+      command: oslevel
+      register: aix_version
+      when: is_aix
+
+    - name: Set Zabbix Agent URL for AIX 7.1
+      ansible.builtin.set_fact:
+        zabbix_agent_url: "https://cdn.zabbix.com/zabbix/binaries/stable/6.4/6.4.2/zabbix-agent-6.4.2-1.aix7.1.ppc.rpm"
+      when: is_aix and aix_version.stdout.startswith('7.1')
+
+    - name: Set Zabbix Agent URL for AIX 7.2
+      ansible.builtin.set_fact:
+        zabbix_agent_url: "https://cdn.zabbix.com/zabbix/binaries/stable/6.2/6.2.3/zabbix-agent-6.2.3-1.aix7.2.ppc.rpm"
+      when: is_aix and aix_version.stdout.startswith('7.2')
 
     - name: Check for wget
       command: which wget
