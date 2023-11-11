@@ -1,0 +1,33 @@
+---
+- name: Install and Configure Zabbix Agent
+  hosts: all
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: Check if the target system is AIX
+      ansible.builtin.set_fact:
+        is_aix: "{{ ansible_os_family == 'AIX' }}"
+
+    - name: Install Zabbix Agent on AIX
+      ansible.builtin.command:
+        cmd: yum install -y zabbix-agent
+      when: is_aix
+
+    - name: Configure Zabbix Agent
+      ansible.builtin.lineinfile:
+        path: /etc/zabbix/zabbix_agentd.conf
+        line: "Server=192.168.240.43"
+      notify: restart zabbix-agent
+
+    - name: Configure Zabbix Agent (ServerActive)
+      ansible.builtin.lineinfile:
+        path: /etc/zabbix/zabbix_agentd.conf
+        line: "ServerActive=192.168.240.43"
+      notify: restart zabbix-agent
+
+  handlers:
+    - name: restart zabbix-agent
+      ansible.builtin.service:
+        name: zabbix-agent
+        state: restarted
