@@ -17,7 +17,7 @@
               key: "{{ event.payload.event_tags.key[0] }}"
               run: "{{ event.payload.host_host }}"
     - name: Page Space
-      condition: event.payload.event_tags.playbook is select("==", "Page Space")
+      condition: event.payload.event_tags.playbook is select("==", "Page Space Kick")
       action:
         run_job_template: 
           name: Page Space Kick
