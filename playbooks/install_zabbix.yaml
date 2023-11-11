@@ -4,14 +4,38 @@
   gather_facts: yes
   become: yes
 
+  vars:
+    zabbix_agent_url: "https://cdn.zabbix.com/zabbix/binaries/stable/6.2/6.2.3/zabbix-agent-6.2.3-1.aix7.2.ppc.rpm"
+    zabbix_agent_rpm: "/tmp/zabbix-agent-6.2.3-1.aix7.2.ppc.rpm"
+
   tasks:
     - name: Check if the target system is AIX
       ansible.builtin.set_fact:
         is_aix: "{{ ansible_os_family == 'AIX' }}"
 
-    - name: Install Zabbix Agent on AIX
+    - name: Check for wget
+      command: which wget
+      register: wget_installed
+      ignore_errors: yes
+      when: is_aix
+
+    - name: Check for curl
+      command: which curl
+      register: curl_installed
+      ignore_errors: yes
+      when: is_aix and not wget_installed.rc == 0
+
+    - name: Download Zabbix Agent using wget
+      command: "wget -O {{ zabbix_agent_rpm }} {{ zabbix_agent_url }}"
+      when: is_aix and wget_installed.rc == 0
+
+    - name: Download Zabbix Agent using curl
+      command: "curl -o {{ zabbix_agent_rpm }} {{ zabbix_agent_url }}"
+      when: is_aix and not wget_installed.rc == 0 and curl_installed.rc == 0
+
+    - name: Install Zabbix Agent RPM
       ansible.builtin.command:
-        cmd: yum install -y zabbix-agent
+        cmd: "rpm -i {{ zabbix_agent_rpm }}"
       when: is_aix
 
     - name: Configure Zabbix Agent
