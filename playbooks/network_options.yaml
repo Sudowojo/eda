@@ -29,3 +29,4 @@
         body: 
           json: 
             text: "[SELF HEAL] {{ run }}: no -p -o {{ key }}={{ vars[key] }}"
+      status_code: 200
