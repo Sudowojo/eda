@@ -17,6 +17,11 @@
       register: current_page_space_in_mb
       failed_when: current_page_space_in_mb.rc != 0
 
+    - name: Calculate the current size of the active page space (in %)
+      shell: lsps -s | tail -n 1 | awk '{print $2}'
+      register: current_page_space_in_percent
+      failed_when: current_page_space_in_percent.rc != 0
+
     - name: Calculate the current PP size
       shell: lsvg rootvg | grep "PP SIZE:" | awk '{ print $(NF -1) }'
       register: pp_size
@@ -54,3 +59,22 @@
       shell: chps -s {{ pps_needed }} "{{ page_space_name.stdout }}"
       register: chps_output
       failed_when: chps_output.rc != 0
+
+    - name: Calculate the new size of the active page space (in MB)
+      shell: lsps -s | tail -n 1 | awk '{print $1}' | sed 's/MB//g'
+      register: new_page_space_in_mb
+      failed_when: new_page_space_in_mb.rc != 0
+
+    - name: Calculate the current size of the active page space (in %)
+      shell: lsps -s | tail -n 1 | awk '{print $2}'
+      register: new_page_space_in_percent
+      failed_when: new_page_space_in_percent.rc != 0
+
+    - name: Send message to Teams
+      uri:
+        url: "{{ teams_url }}"
+        method: POST
+        body_format: json
+        body: 
+          title: "SELF HEALING (Page Space)"
+          text: "{{ run }}: Page Space Before: {{ current_page_space_in_mb }}MB ({{ current_page_space_in_percent }}), Page Space After: {{ new_page_space_in_mb }}MB ({{ new_page_space_in_percent }})"
