@@ -30,7 +30,7 @@
     ##########################################################################
 
     - name: "Resizing {{ key }} to {{ new_fs_size_in_mb }}."
-      shell: "chfs -a size={{ new_fs_size_in_mb }} {{ key }}"
+      shell: "chfs -a size={{ new_fs_size_in_mb }}M {{ key }}"
       register: current_space_in_perc
       failed_when: current_space_in_perc.rc != 0
 
