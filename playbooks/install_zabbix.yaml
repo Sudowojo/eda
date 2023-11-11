@@ -28,13 +28,13 @@
       when: is_aix and aix_version.stdout.startswith('7.2')
 
     - name: Check for wget
-      command: which wget
+      command: which /opt/freeware/bin/wget
       register: wget_installed
       ignore_errors: yes
       when: is_aix
 
     - name: Check for curl
-      command: which curl
+      command: which /opt/freeware/bin/curl
       register: curl_installed
       ignore_errors: yes
       when: is_aix and not wget_installed.rc == 0
