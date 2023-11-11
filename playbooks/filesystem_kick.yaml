@@ -1,6 +1,7 @@
 ---
 - name: Increase Filesystem Size
   hosts: "{{ run }}"
+  become: yes
   vars:
     kick_percentage: 0.20
     key: /opt
@@ -21,4 +22,4 @@
 
     - name: Print Debug
       ansible.builtin.debug:
-        msg: Current Space: {{ current_space_in_mb.stdout }}. New Size: {{ new_fs_size_in_mb }}
+        msg: "Current Space = {{ current_space_in_mb.stdout }}. New Size: {{ new_fs_size_in_mb }}"
