@@ -16,12 +16,12 @@
       register: current_space_in_mb
       failed_when: current_space_in_mb.rc != 0
 
-    - name: Calculate the current percentage of {{ key }}
+    - name: "Calculate the current percentage of {{ key }}"
       shell: df -m /opt | awk '{ print $4 }'
       register: current_space_in_perc
       failed_when: current_space_in_perc.rc != 0
 
-    - name: Calculate {{ kick_percentage }}% of {{ key }}
+    - name: "Calculate {{ kick_percentage }}% of {{ key }}"
       set_fact:
         new_fs_size_in_mb: "{{ ((current_space_in_mb.stdout | int * kick_percentage | float) | round(0, 'ceil') | int + current_space_in_mb.stdout | int) }}"
 
@@ -29,13 +29,12 @@
     # TODO: Check the volume group to see if it can even perform the action. #
     ##########################################################################
 
-    - name: Resizing {{ key }} to {{ new_fs_size_in_mb }}.
-      community.general.aix_filesystem:
-        filesystem: "{{ key }}"
-        size: "{{ new_fs_size_in_mb }}M"
-        state: present
+    - name: "Resizing {{ key }} to {{ new_fs_size_in_mb }}."
+      shell: "chfs -a size={{ new_fs_size_in_mb }} {{ key }}"
+      register: current_space_in_perc
+      failed_when: current_space_in_perc.rc != 0
 
-    - name: Calculate the new percentage of {{ key }}
+    - name: "Calculate the new percentage of {{ key }}"
       shell: df -m /opt | awk '{ print $4 }'
       register: new_space_in_perc
       failed_when: new_space_in_perc.rc != 0
