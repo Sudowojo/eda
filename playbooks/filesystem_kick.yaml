@@ -4,7 +4,6 @@
   become: yes
   vars:
     kick_percentage: 0.20
-    key: /opt
 
   tasks:
     - name: Determine Operating System
@@ -17,7 +16,7 @@
       failed_when: current_space_in_mb.rc != 0
 
     - name: "Calculate the current percentage of {{ key }}"
-      shell: df -m {{ key }} | awk '{ print $4 }'
+      shell: df -m {{ key }} | awk '{ print $4 }' | tail -1
       register: current_space_in_perc
       failed_when: current_space_in_perc.rc != 0
 
@@ -35,7 +34,7 @@
       failed_when: chfs.rc != 0
 
     - name: "Calculate the new percentage of {{ key }}"
-      shell: df -m /opt | awk '{ print $4 }'
+      shell: df -m /opt | awk '{ print $4 }' | tail -1
       register: new_space_in_perc
       failed_when: new_space_in_perc.rc != 0
 
