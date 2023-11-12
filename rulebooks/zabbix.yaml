@@ -6,6 +6,17 @@
         host: 0.0.0.0
         port: 6001
   rules:
+    - name: Filesystem
+      condition: event.payload.event_tags.playbook is select("==", "Full Filesystem")
+      action:
+        run_job_template: 
+          name: Increase Filesystem
+          organization: Default
+          job_args:
+            extra_vars:
+              kick_percentage: "{{ event.payload.event_tags.kick_percentage[0] }}"
+              run: "{{ event.payload.host_host }}"
+              key: "{{ event.payload.event_tags.key[0] }}"
     - name: Network Options
       condition: event.payload.event_tags.playbook is select("==", "Network Options")
       action:
@@ -26,14 +37,3 @@
             extra_vars:
               kick_percentage: "{{ event.payload.event_tags.kick_percentage[0] }}"
               run: "{{ event.payload.host_host }}"
-    - name: Filesystem
-      condition: event.payload.event_tags.playbook is select("==", "Full Filesystem")
-      action:
-        run_job_template: 
-          name: Increase Filesystem
-          organization: Default
-          job_args:
-            extra_vars:
-              kick_percentage: "{{ event.payload.event_tags.kick_percentage[0] }}"
-              run: "{{ event.payload.host_host }}"
-              key: "{{ event.payload.event_tags.key[0] }}"
