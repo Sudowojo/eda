@@ -1,0 +1,21 @@
+---
+- name: Capture performance stats
+  hosts: "{{ run }}"
+  vars:
+    aws_access_key: "{{ lookup('env','AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('env','AWS_SECRET_ACCESS_KEY') }}"
+    s3_bucket: "your_s3_bucket_name"
+    s3_region: "your_s3_region"
+
+  tasks:
+    - name: Run 'ps -ef' and write output to a file
+      shell: ps -ef > /tmp/ps-ef_highspeed_snap.txt
+
+    - name: Create a tar file including all 'highspeed_snap' files
+      shell: tar -cvf /tmp/highspeed_snap.tar /tmp/*highspeed_snap*
+
+    - name: Fetch the tar file to ansible server
+      fetch:
+        src: /tmp/highspeed_snap.tar
+        dest: "/tmp/highspeed_snap.tar"
+        flat: yes
