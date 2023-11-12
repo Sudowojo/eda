@@ -12,12 +12,12 @@
         os_type: "{{ ansible_facts['distribution'] | default(ansible_facts['os_family']) }}"
 
     - name: Calculate the current size of {{ key }}
-      shell: df -m /opt | tail -1 | awk '{ print $2 }'
+      shell: df -m {{ key }} | tail -1 | awk '{ print $2 }'
       register: current_space_in_mb
       failed_when: current_space_in_mb.rc != 0
 
     - name: "Calculate the current percentage of {{ key }}"
-      shell: df -m /opt | awk '{ print $4 }'
+      shell: df -m {{ key }} | awk '{ print $4 }'
       register: current_space_in_perc
       failed_when: current_space_in_perc.rc != 0
 
@@ -31,8 +31,8 @@
 
     - name: "Resizing {{ key }} to {{ new_fs_size_in_mb }}."
       shell: "chfs -a size={{ new_fs_size_in_mb }}M {{ key }}"
-      register: current_space_in_perc
-      failed_when: current_space_in_perc.rc != 0
+      register: chfs
+      failed_when: chfs.rc != 0
 
     - name: "Calculate the new percentage of {{ key }}"
       shell: df -m /opt | awk '{ print $4 }'
@@ -46,4 +46,4 @@
         body_format: json
         body: 
           title: "SELF HEALING (Filesystem Kick)"
-          text: "{{ run }}: {{ key }} before: {{ current_space_in_mb.stdout }}MB ({{ current_space_in_perc.stdout }}%), {{ key }} after: {{ new_fs_size_in_mb }}MB ({{ new_space_in_perc.stdout }}%)"
+          text: "{{ run }}: {{ key }} before: {{ current_space_in_mb.stdout }}MB ({{ current_space_in_perc.stdout }}), after: {{ new_fs_size_in_mb }}MB ({{ new_space_in_perc.stdout }})"
