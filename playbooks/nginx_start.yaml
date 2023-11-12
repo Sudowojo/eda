@@ -1,0 +1,10 @@
+---
+- name: Restart Nginx service
+  hosts: "{{ run }}"
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Restart Nginx service
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
