@@ -46,4 +46,4 @@
         body_format: json
         body: 
           title: "SELF HEALING (Filesystem Kick)"
-          text: "{{ run }}: {{ key }} before: {{ current_space_in_mb.stdout }}MB ({{ current_space_in_perc }}), {{ key }} after: {{ new_fs_size_in_mb }}MB ({{ new_space_in_perc }})"
+          text: "{{ run }}: {{ key }} before: {{ current_space_in_mb.stdout }}MB ({{ current_space_in_perc.stdout }}%), {{ key }} after: {{ new_fs_size_in_mb }}MB ({{ new_space_in_perc.stdout }}%)"
