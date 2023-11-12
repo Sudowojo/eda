@@ -8,3 +8,11 @@
       ansible.builtin.service:
         name: nginx
         state: restarted
+    - name: Send message to Teams
+      uri:
+        url: "{{ teams_url }}"
+        method: POST
+        body_format: json
+        body: 
+          title: "SELF HEALING (Nginx)"
+          text: "{{ run }}: Nginx not running, started."
