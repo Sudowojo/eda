@@ -65,6 +65,19 @@
       register: redundancy_check
       failed_when: redundancy_check.stdout != ""
 
-    - name: Display redundancy check results
+    ####################
+    # Perform the work #
+    ####################
+    - name: Putting {{ device }} in a defined state
+      shell: "rmdev -l {{ device }} -R"
+      register: rmdev_output
+      failed_when: rmdev_output.rc != 0
+
+    - name: Debug subdevice
       debug:
-        msg: "Redundancy check for each device: {{ redundancy_check.stdout }}"
+        msg: "Rmdev output for review: {{ rmdev_output.stdout }}"
+
+    - name: Tune {{ key }}={{ vars[key] }} on {{ device }}
+      shell: "chdev -a {{ key }}={{ vars[key] }} -l {{ device }}"
+      register: chdev_output
+      failed_when: chdev_output.rc != 0
