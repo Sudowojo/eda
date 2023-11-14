@@ -28,6 +28,10 @@
       register: subdevice
       ignore_errors: yes
 
+    - name: Debug subdevice
+      debug:
+        msg: "Redundancy check for each device: {{ subdevice.stdout }}"
+
     - name: Fail if no subdevice is found
       fail:
         msg: "No subdevice found for device {{ device }}"
