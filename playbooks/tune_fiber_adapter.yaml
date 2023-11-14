@@ -1,0 +1,51 @@
+---
+- name: Tune fiber adapters
+  hosts: "{{ run }}"
+  become: yes
+  vars:
+    num_cmd_elems: 2048
+
+  tasks:
+
+    ####################
+    # Sanity checks    #
+    ####################
+
+    # Check to make sure our key tunable exists.
+    - name: Check if the tunable exists
+      fail:
+        msg: "'{{ key }}' is not defined"
+      when: vars[key] is not defined
+
+    # Check to make sure our device is defined
+    - name: Check if the device is defined
+      fail:
+        msg: "device is not defined"
+      when: device is not defined
+
+    - name: Check for device in lspath output
+      shell: "lspath | grep -w {{ device }}"
+      register: lspath_check
+      ignore_errors: yes
+
+    - name: Check if 'fcs' is in the device name
+      fail:
+        msg: "The device name '{{ device }}' does not contain 'fcs'"
+      when: "'fcs' not in device"
+
+    ####################
+    # Redundancy check #
+    ####################
+    - name: Get lspath output
+      shell: "lspath"
+      register: lspath_output
+
+    - name: Analyze path redundancy
+      shell: |
+        echo "{{ lspath_output.stdout }}" | awk '{print $2, $3}' | sort | uniq -c | awk '$1 < 2 {print $2, $3, "not redundant"}'
+      register: redundancy_check
+      failed_when: redundancy_check.stdout != ""
+
+    - name: Display redundancy check results
+      debug:
+        msg: "Redundancy check for each device: {{ redundancy_check.stdout }}"
