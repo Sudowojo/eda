@@ -81,3 +81,6 @@
       shell: "chdev -a {{ key }}={{ vars[key] }} -l {{ device }}"
       register: chdev_output
       failed_when: chdev_output.rc != 0
+
+    - name: Running cfgmgr
+      shell: "cfgmgr"
