@@ -39,7 +39,7 @@
 
     - name: Set subdevice fact
       set_fact:
-        subdevice: "{{ subdevice_output.stdout_lines[0] }}"
+        subdevice: "{{ subdevice.stdout_lines[0] }}"
       when: subdevice.stdout != ""
 
     - name: Check for device in lspath output
