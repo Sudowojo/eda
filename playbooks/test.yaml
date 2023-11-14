@@ -7,8 +7,8 @@
     - name: Determine Operating System
       ansible.builtin.set_fact:
         os_type: "{{ ansible_facts['distribution'] | default(ansible_facts['os_family']) }}"
-  - name: Resizing /opt +512M
-    community.general.aix_filesystem:
-      filesystem: /opt
-      size: +512M
-      state: present
+    - name: Resizing /opt +512M
+      community.general.aix_filesystem:
+        filesystem: /opt
+        size: +512M
+        state: present
