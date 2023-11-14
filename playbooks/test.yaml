@@ -4,11 +4,16 @@
   become: yes
 
   tasks:
-    - name: Determine Operating System
-      ansible.builtin.set_fact:
-        os_type: "{{ ansible_facts['distribution'] | default(ansible_facts['os_family']) }}"
-    - name: Resizing /opt +512M
-      community.general.aix_filesystem:
-        filesystem: /opt
-        size: +512M
-        state: present
+    - name: Get lspath output
+      shell: "lspath"
+      register: lspath_output
+
+    - name: Analyze path redundancy
+      shell: |
+        echo "{{ lspath_output.stdout }}" | awk '{print $2, $3}' | sort | uniq -c | awk '$1 < 2 {print $2, $3, "not redundant"}'
+      register: redundancy_check
+      failed_when: redundancy_check.stdout != ""
+
+    - name: Display redundancy check results
+      debug:
+        msg: "Redundancy check for each device: {{ redundancy_check.stdout }}"
