@@ -23,8 +23,23 @@
         msg: "device is not defined"
       when: device is not defined
 
+    - name: Get subdevice for the specified device
+      shell: "lsdev -p {{ device }} | awk '{ print $1 }'"
+      register: subdevice
+      ignore_errors: yes
+
+    - name: Fail if no subdevice is found
+      fail:
+        msg: "No subdevice found for device {{ device }}"
+      when: subdevice.stdout == ""
+
+    - name: Set subdevice fact
+      set_fact:
+        subdevice: "{{ subdevice_output.stdout_lines[0] }}"
+      when: subdevice.stdout != ""
+
     - name: Check for device in lspath output
-      shell: "lspath | grep -w {{ device }}"
+      shell: "lspath | grep -w {{ subdevice }}"
       register: lspath_check
       ignore_errors: yes
 
