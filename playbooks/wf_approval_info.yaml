@@ -22,3 +22,13 @@
     - name: Print lspath
       debug:
         msg: "{{ lspath_output.stdout_lines }}"
+
+    - name: Send message to Teams
+          uri:
+            url: "{{ teams_url }}"
+            method: POST
+            body_format: json
+            body: 
+              title: "APPROVAL NEEDED (Fiber Adapter Tuning)"
+              text: "{{ run }}: Fiber Adapter Tunables. Login to review the impact and approve this automation."
+      when: context == "fiber"
