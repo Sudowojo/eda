@@ -46,3 +46,15 @@
             extra_vars:
               key: "{{ event.payload.event_tags.key[0] }}"
               run: "{{ event.payload.host_host }}"
+    - name: Fiber Adapters
+      condition: event.payload.event_tags.playbook is select("==", "Tune Fiber Adapters")
+      action:
+        run_workflow_template: 
+          name: Tune Fiber Adapter
+          organization: Default
+          job_args:
+            extra_vars:
+              key: "{{ event.payload.event_tags.key[0] }}"
+              run: "{{ event.payload.host_host }}"
+              context: fiber
+              device: "{{ event.payload.event_tags.device[0] }}"
