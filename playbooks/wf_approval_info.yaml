@@ -17,3 +17,7 @@
     - name: Run lspath
       command: lspath
       when: context == "fiber"
+
+    - name: Print lspath
+      debug:
+        msg: "{{ lspath.stdout_lines }}"
