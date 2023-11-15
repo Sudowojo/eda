@@ -1,0 +1,19 @@
+---
+- name: NOC Review
+  hosts: "{{ run }}"
+  become: yes
+  vars:
+    context: none
+
+  tasks:
+    - name: Get list of currently logged in users
+      command: who
+      register: logged_in_users
+
+    - name: Print list of currently logged in users
+      debug:
+        msg: "{{ logged_in_users.stdout_lines }}"
+
+    - name: Run lspath
+      command: lspath
+      when: context == "fiber"
