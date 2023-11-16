@@ -16,7 +16,7 @@
             extra_vars:
               key: "{{ event.payload.event_tags.key[0] }}"
               run: "{{ event.payload.host_host }}"
-              context: fiber
+              context: "fiber"
               device: "{{ event.payload.event_tags.device[0] }}"
     - name: Nginx
       condition: event.payload.event_tags.playbook is select("==", "Restart Nginx")
