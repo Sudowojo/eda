@@ -9,7 +9,7 @@
     - name: Fiber Adapters
       condition: event.payload.event_tags.playbook is select("==", "Tune Fiber Adapters")
       action:
-        run_workflow_template: 
+        run_job_template: 
           name: Tune Fiber Adapter
           organization: Default
           job_args:
